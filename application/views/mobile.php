@@ -1,0 +1,188 @@
+<?php
+
+//$type, room and $time_group
+
+echo "<div class='container'>";
+echo "<div class='row'>";
+
+
+
+$year = $this->Setting->get("year");
+$rooms = $this->Setting->get("places");
+$time_groups = $this->Setting->get("time_groups");
+$this->Entry->reset_poster_order();
+
+
+
+
+if ($type == "talk" && $room == "all" && $time_group == "all")
+{
+	echo "<h1>Talks</h1>";
+
+	foreach(explode(",",$rooms) as $room)
+	{
+		foreach(explode(",",$time_groups) as $time_group)
+		{
+			$q = $this->db->query("select * from entry where format='talk' and place=? and time_group=? and year=? order by seq asc",Array($room,$time_group,$year));
+			$this->Entry->mobile_list_all_talk($room,$time_group,$q);
+		}	
+	}
+	
+}
+else if ($type == "poster" && $room == "all" && $time_group == "all")
+{
+	echo "<center>";
+	echo anchor("start/mobile/menu/all/all","Return",Array("class" => "btn btn-primary btn-lg"));
+	echo "</center>";
+	echo "<h1>Posters</h1>";
+	$q = $this->db->query("select * from entry where format='poster' and year=?",Array($year));
+	$this->Entry->mobile_list_all($q);
+	echo "<hr/>";
+	echo "<center>";
+	echo anchor("start/mobile/menu/all/all","Return",Array("class" => "btn btn-primary btn-lg"));
+	echo "</center>";
+	echo "<br/><br/>";
+}
+else if ($type == "menu" && $room == "all" && $time_group == "all")
+{
+	$logo = base_url("assets/cp_logo_sm.png");
+	echo "<br/>";
+	echo "<center>";
+	echo "<img src=$logo class='img-responsive'>";
+	echo "<br/>";
+	echo "<h3>$year Student Research Conference</h3><hr/>";
+	echo "<div class='row justify-content-center'>";
+	echo "<div class='col-md-6 col-md-offset-3 text-left'>";
+	echo $this->Setting->get("summary");
+	echo "</div>";
+	echo "</div>";
+
+	echo "<hr/>";
+	echo "<h2>Talks</h2>";
+
+	$tg = explode(",",$time_groups);
+
+	foreach($tg as $time_group)
+		{
+			$hour = substr($time_group,0,2);
+			if ($hour >= 8 && $hour <= 12)
+				$pre = "Morning";
+			else $pre = "Afternoon";
+			echo "<h4>$pre: $time_group</h4>";
+			foreach(explode(",",$rooms) as $room)
+			{
+					echo anchor("start/mobile/talk/$room/$time_group","$room",Array("class" => "btn btn-success btn-lg"));
+					echo "<br/>";
+					echo "<br/>";
+			}
+		}
+
+	echo "<hr/>";
+	echo "<h2>Posters</h2>";
+
+	echo anchor("start/mobile/poster/all/all","All posters",Array("class" => "btn btn-success btn-lg"));
+	
+	echo "<hr/>";
+	echo "<h2>Other</h2>";
+	echo "<small class='text-muted'>(Tap to see/hide.)</small>";
+
+	echo <<<EOT
+	<div id="my_group">
+	
+		<div class="btn-group" role="group" aria-label="Basic example">	
+				<button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" data-target="#collapseIndex" data-parent="#my_group" aria-expanded="false" aria-controls="collapseExample">Index</button>
+				<button class="btn btn-warning btn-lg" type="button" data-toggle="collapse" data-target="#collapseResources" data-parent="#my_group" aria-expanded="false" aria-controls="collapseExample">Resources</button>
+				<button class="btn btn-info	 btn-lg" type="button" data-toggle="collapse" data-target="#collapseQR" data-parent="#my_group" aria-expanded="false" aria-controls="collapseExample">Mobile Program QR code</button>
+		</div>
+	
+		</p>
+
+		<div class="accordion-group">
+		<div class="collapse" id="collapseIndex">
+  		<div class="card card-body">
+EOT;
+			$this->Entry->show_index($year);
+echo <<<EOT1
+  		</div>
+		</div>
+		</center>
+
+		<div class="collapse" id="collapseResources">
+	  		<div class="card card-body">
+					<h2>Resources</h2>
+					<h3>On campus</h3>
+					<ul>
+						<li> <a href=https://studentresearch.calpoly.edu/ target=_blank>Office of Student Research</a>
+						<li> <a href=https://lsamp.calpoly.edu/ target=_blank>CSU LSAMP at Cal Poly</a>
+						<li> <a href=https://beaconmentors.calpoly.edu/ target=_blank>BEACoN Mentors</a>
+					</ul>
+
+					<h3>Off campus</h3>
+					<ul>
+						<li> <a href=https://www.calstate.edu/impact-of-the-csu/research/csuperb/symposium target=_blank>CSU/CSUPERB Annual Biotechnology Symposium</a>
+						<li> <a href=https://www.ssric.org/participate/src target=_blank target=_blank>CSU SSRIC Social Science Student Symposium</a>
+						<li> <a href=https://emerging-researchers.org/ target=_blank>Emerging Researchers National (ERN) Conference</a>
+						<li> <a href=https://www.cur.org/what/events/students/ncur/ target=_blank>National Conference on Undergraduate Research</a>
+						<li> <a href=https://www.sacnas.org/conference target=_blank>SACNAS National Diversity in STEM Conference</a>
+					</ul> 
+	  		</div>
+			</div>
+		</div>
+
+
+		<div class="collapse" id="collapseQR">
+	  		<div class="card card-body">
+	  		<center>
+	  		<img src='https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=https://conference.csm.calpoly.edu/mobile&choe=UTF-8 title='Link to program' />
+	  		</center>
+	  		</div>
+	  	</div>
+
+	</div>
+
+
+<hr/>
+<br/><br/>
+EOT1;
+
+
+	
+}
+else if ($type == "talk" && $room != "all" && $time_group != "all")
+{
+	echo "<br/>";
+	echo "<center>";
+	echo anchor("start/mobile/menu/all/all","Return",Array("class" => "btn btn-primary btn-lg"));
+	echo "</center>";
+	echo "<hr/>";
+	$q = $this->db->query("select * from entry where format='talk' and place=? and time_group=? and year=? order by seq asc",Array($room,$time_group,$year));
+	$this->Entry->mobile_list_all_talk($room,$time_group,$q);
+	echo "<hr/>";
+	echo "<center>";
+	echo anchor("start/mobile/menu/all/all","Return",Array("class" => "btn btn-primary btn-lg"));
+	echo "</center>";
+	echo "<br/><br/>";
+}
+
+
+
+echo "</div>";
+echo "</div>";
+?>
+
+
+<script>
+
+var url = window.location.href;
+var anchorlink = url.split('#');
+var tag = anchorlink[1];
+highlight(tag);
+
+function highlight(id)
+{
+	var use_id = '#'+id;
+	console.log(use_id);
+	//(use_id).css('background','#ff0000');
+	$(use_id).effect("highlight", {}, 3000);
+}
+</script>

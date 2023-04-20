@@ -1,0 +1,29 @@
+#drop database youhere;
+#create database youhere;
+use conference;
+
+create table entry (
+	entry_id int not null auto_increment,
+	entry_hash varchar(32),
+	year varchar(4),
+	format varchar(50),
+	title text,
+	abstract text,
+	people text,
+	talk_avail text,
+	poster_avail text,	
+	submit datetime,
+	seq int,
+	primary key(entry_id)
+);
+
+create table setting (
+	setting_id int not null auto_increment,
+	name text,
+	value text,
+	primary key(setting_id)
+);
+
+
+
+

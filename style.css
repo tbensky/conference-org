@@ -1,0 +1,71 @@
+body {
+ background-color: #fffff;
+ margin-left: 1cm;
+ font-family: Lucida Grande, Verdana, Sans-serif;
+ font-size: 14pt;
+ color: #4F5155;
+}
+
+
+h1 {
+ color: #444;
+ background-color: transparent;
+ font-size: 16pt;
+ font-weight: bold;
+ margin: 24px 0 2px 0;
+ padding: 5px 0 6px 0;
+}
+
+h2 {
+    font-size: 14pt;
+    background-color: #444;
+    color: #ffffff;
+    font-weight: bold;
+    margin: 24px 0 2px 0;
+    padding-left: 10px;
+}
+
+#note
+    {
+        color: #888888;
+        font-size: 12pt;
+    }
+    
+#people
+    {
+        font-size: 12pt;
+    }
+    
+#add_link
+    {
+        font-size: 10pt;
+    }
+
+input, textarea
+	{
+		background: #ffffee;
+		font-size: 14pt;
+	}
+
+#vert_bar
+    {
+        border-left: 2px solid black;
+        height: 200px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.other_affil
+{
+    visiblity: visible;
+}
+    

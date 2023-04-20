@@ -1,0 +1,3 @@
+alter table entry add column place text after seq;
+alter table entry add column time text after seq;
+alter table entry add column time_group text after seq;
