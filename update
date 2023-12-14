@@ -1,6 +1,6 @@
 rm conf.zip
 zip -r conf.zip application/controllers application/views application/models *.css *.js database images/ js mobile *.mysql assets
-cp conf.zip /Users/tom/AWS
-cd /Users/tom/AWS
+cp conf.zip /Users/tom/Dropbox/AWS
+cd /Users/tom/Dropbox/AWS
 scp -i tbensky.pem conf.zip tbensky@test-proton.csm.calpoly.edu:/tmp
 

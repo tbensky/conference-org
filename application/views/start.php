@@ -1,7 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-
 //put ?deadline after conference URL for late submissions
 $qs = $_SERVER['QUERY_STRING'];
 
@@ -185,7 +184,9 @@ if ($deadline == 'true' && empty($qs))
 			<th>Role</th>
 			<th>Presenter</th>
 			<th>Email</th>
-			<th>T-shirt size&nbsp;<a href=https://www.apparelvideos.com/cs/CatalogBrowser?todo=mm&productId=NL6210 target=_blank><i style="color: black;" class="fa-solid fa-circle-info"></i></a></th>
+			<!--
+				<th>T-shirt size&nbsp;<a href=https://www.apparelvideos.com/cs/CatalogBrowser?todo=mm&productId=NL6210 target=_blank><i style="color: black;" class="fa-solid fa-circle-info"></i></a></th>
+			-->
 			<th>Frost Support</th>
 			<th></th>
 		</tr>
@@ -440,6 +441,11 @@ function add_person()
 	html += `<input id="${email_id}" size=20 class="form-control"></input>`;
 	html += '</td>';
 
+	//T-shirt sizes not needed 11-Dec-2023
+
+	html += `<input type=hidden id="${tshirt_id}" value="none">`;
+	
+	/*
 	html += '<td>';
 	html += `<select class="form-control" id="${tshirt_id}" onChange="check_presenter('${speaker_select_id}','${email_id}','${role}'),'${tshirt_id}'">`;
 	html += '<option value=select_default>--Select--</option>';
@@ -454,6 +460,7 @@ function add_person()
 	html += '<option value=not_presenting>Not presenting</option>';
 	html += '</select>';
 	html += '</td>';
+	*/
 	
 	
 	html += '<td>';
@@ -484,16 +491,16 @@ function check_presenter(speaker_select_id,email_id,role_id,tshirt_id)
 		$(`#${email_id}`).val("");
 		$(`#${email_id}`).attr("placeholder","Type email address here");
 
-		$(`#${tshirt_id}`).attr("disabled",false);
-		$(`#${tshirt_id}`).val("select_default");
+		//$(`#${tshirt_id}`).attr("disabled",false);
+		//$(`#${tshirt_id}`).val("select_default");
 	}
 	else 
 	{
 		$(`#${email_id}`).attr("disabled",true);
 		$(`#${email_id}`).val("Not needed");
 
-		$(`#${tshirt_id}`).attr("disabled",true);
-		$(`#${tshirt_id}`).val("not_presenting");
+		//$(`#${tshirt_id}`).attr("disabled",true);
+		//$(`#${tshirt_id}`).val("not_presenting");
 	}
 }
 
@@ -641,8 +648,9 @@ function go(action)
 		var rep = get_value(i,'faculty_rep');
 		var speaker = get_value(i,'speaker');
 		var frost = get_value(i,'frost_scholar');
-		var tshirt = get_value(i,'tshirt');
-		var line = {'name': name,'email': email,'affiliation': affil,'other_affiliation': other_affil, 'role': rep, 'speaker': speaker, 'frost':frost,'tshirt':tshirt};
+		//var tshirt = get_value(i,'tshirt');
+		//var line = {'name': name,'email': email,'affiliation': affil,'other_affiliation': other_affil, 'role': rep, 'speaker': speaker, 'frost':frost,'tshirt':tshirt};
+		var line = {'name': name,'email': email,'affiliation': affil,'other_affiliation': other_affil, 'role': rep, 'speaker': speaker, 'frost':frost};
 		if (rep == 'Student')
 			has_student = true;
 		if (rep == 'Faculty')
