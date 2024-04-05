@@ -119,7 +119,6 @@ function get_entry_parts($json)
 
 		foreach($json['people'] as $p)
 		{
-			
 			if ($p['affiliation'] != "Other...")
 			{
 				if ($p['affiliation'] == 'Kinesiology')
@@ -130,7 +129,7 @@ function get_entry_parts($json)
 			}
 			else $affil = $p['other_affiliation'];
 
-			array_push($people_list,Array('name' => $p['name'],'affil' => $affil,'frost' => $p['frost'],'speaker' => $p['speaker']));
+			array_push($people_list,Array('name' => $p['name'],'affil' => $affil,'frost' => $p['frost'],'santa_rosa' => $p['santa_rosa'],'speaker' => $p['speaker']));
 			array_push($affil_list,$affil);
 		}
 
@@ -139,8 +138,10 @@ function get_entry_parts($json)
 			array_push($entry['person_and_affil'],Array('name' => $p['name'],'affil' => $p['affil'],'speaker' => $p['speaker']));
 	
 		$frost = "";
+		$santa_rosa = "";
 		$any_frost = false;
 		$any_presenter = false;
+		$any_santa_rosa = false;
 
 		$affil_list = array_values(array_unique($affil_list));
 		$authors = "";
@@ -157,6 +158,13 @@ function get_entry_parts($json)
 				$any_frost = true;
 			}
 
+			$santa_rosa = "";
+			if ($vals['santa_rosa'] == 'yes')
+			{
+				$santa_rosa = "&sect;";
+				$any_santa_rosa = true;
+			}
+
 			if ($vals['speaker'] == "yes")
 			{
 				$frost .= "&starf;";
@@ -170,8 +178,8 @@ function get_entry_parts($json)
 				$aindex .= $a[0] . ", " . $a[0] . "|";
 				$i = 1 + array_search($vals['affil'],$affil_list);
 				if (count($affil_list) > 1)
-					$x  .= "<sup>$i$frost</sup>,";
-				else $x .= "<sup>$frost</sup>, ";
+					$x  .= "<sup>$i$frost$santa_rosa</sup>,";
+				else $x .= "<sup>$frost$santa_rosa</sup>, ";
 			}
 		}
 		$ret .= rtrim($x,", ");
@@ -189,6 +197,8 @@ function get_entry_parts($json)
 		}
 		if ($any_frost)
 			$x .= "<sup>&dagger;</sup>Frost Support, ";
+		if ($any_santa_rosa)
+			$x .= "<sup>&sect;</sup>Santa Rosa Creek Foundation Support, ";
 		if ($any_presenter)
 			$x .= "<sup>&starf;</sup>Speaker";
 		$x = rtrim($x,", ");
@@ -222,13 +232,21 @@ function get_entry_parts_flat($json)
 			}
 			else $affil = $p['other_affiliation'];
 
-			array_push($people_list,Array('name' => $p['name'],'affil' => $affil,'frost' => $p['frost']));
+			array_push($people_list,Array(
+								'name' => $p['name'],
+								'affil' => $affil,
+								'frost' => $p['frost'],
+								'santa_rosa' => $p['santa_rosa']
+							));
 			array_push($affil_list,$affil);
 		}
 
 	
 		$frost = "";
 		$any_frost = false;
+
+		$santa_rosa = "";
+		$any_santa_rosa = false;
 
 		$affil_list = array_values(array_unique($affil_list));
 		$authors = "";
@@ -243,6 +261,13 @@ function get_entry_parts_flat($json)
 			{
 				$frost = "&dagger;";
 				$any_frost = true;
+			}
+
+			$santa_rosa = "";
+			if ($vals['santa_rosa'] == 'yes')
+			{
+				$santa_rosa = "&sect;";
+				$any_santa_rosa = true;
 			}
 
 			$a = explode(",",$vals['name']);
@@ -338,6 +363,7 @@ function gen_preview($json)
 
 	function list_all($q)
 	{
+		echo "asdfasdfsa";
 		echo "<table class='table table-hover'>";
 		foreach($q->result_array() as $row)
 		{

@@ -186,9 +186,12 @@ if ($deadline == 'true' && empty($qs))
 			<th>Email</th>
 			<!--
 				<th>T-shirt size&nbsp;<a href=https://www.apparelvideos.com/cs/CatalogBrowser?todo=mm&productId=NL6210 target=_blank><i style="color: black;" class="fa-solid fa-circle-info"></i></a></th>
-			-->
+			
 			<th>Frost Support</th>
-			<th></th>
+			<th>Santa Rosa Creek Fdn. Support</th>
+			-->
+			<th>Support</th>
+			<th>Previous Scientific<br/>Conference Experience?</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -231,7 +234,7 @@ Words: <span id="display_count">0</span> | Remaining: <span id="word_left">0</sp
 
 <div class="form-group">
 <h4>6. Disclaimer</h4>
-<blockquote>I agree to sign Cal Poly's video/audio image release form, which means that I grant permission to Cal Poly San Luis Obispo and its employees and agents to use my visual/audio content, which includes, but is not limited to, any type of recording, photographs, digital images, drawings, renderings, voices, sounds, video recordings, audio clips, concept ideas and any accompanying written descriptions. <a href=https://drive.google.com/file/d/1eTYcYouL2rXaS6qOhQszEY7oVJpwSd1D/view?usp=sharing target=_blank>Read the full release form</a>.
+<blockquote>I agree to Cal Poly's video/audio image release form, which means that I grant permission to Cal Poly San Luis Obispo and its employees and agents to use my visual/audio content, which includes, but is not limited to, any type of recording, photographs, digital images, drawings, renderings, voices, sounds, video recordings, audio clips, concept ideas and any accompanying written descriptions. <a href=https://drive.google.com/file/d/1eTYcYouL2rXaS6qOhQszEY7oVJpwSd1D/view?usp=sharing target=_blank>Read the full release form</a>.
 </blockquote>
 <input type=checkbox id=disclaimer> Please check this box indicating you read the disclaimer. 
 
@@ -383,9 +386,21 @@ function get_prefix(x,id)
 	return('people_' + x + '_' + id);
 }
 
-function get_value(x,id)
+function get_value(x,_id)
 {
-	var id = '#people_' + x + '_' + id;
+	var id = '#people_' + x + '_' + _id;
+
+	//checkboxes
+	if (_id == 'attended_sci_conf' || 
+		_id == 'presented_sci_conf' ||
+		_id == 'frost_scholar' || 
+		_id == 'santa_rosa')
+		{
+			if ($(id).is(":checked"))
+				return("yes");
+			return("no");
+		}
+
 	return($(id).val());
 }
 
@@ -394,11 +409,11 @@ function add_person()
 	var html;
 	
 	html = '<tr id="people_' + people_count + '"><td>';
-	html += '<input id=' + get_prefix(people_count,'name') + ' size=20 class="form-control" placeholder="Last, First"></input>';
+	html += '<input id=' + get_prefix(people_count,'name') + ' size=20 class="form-control form-control-sm" placeholder="Last, First"></input>';
 	html += '</td>';
 	
 	html += '<td>';
-	html += '<select class="form-control" onchange="affiliation_change(' + people_count + ');" id=' + get_prefix(people_count,'affiliation') + '>';
+	html += '<select class="form-control form-select-sm" onchange="affiliation_change(' + people_count + ');" id=' + get_prefix(people_count,'affiliation') + '>';
 	
 	html += '<option>--Select--</option>';
 	html += '<option>Biological Sciences</option>';
@@ -421,7 +436,7 @@ function add_person()
 	var tshirt_id = get_prefix(people_count,'tshirt');
 	
 	html += '<td>';
-	html += `<select class="form-control" id="${role}" onChange="check_presenter('${speaker_select_id}','${email_id}','${role}','${tshirt_id}')">`;
+	html += `<select class="form-control form-select-sm" id="${role}" onChange="check_presenter('${speaker_select_id}','${email_id}','${role}','${tshirt_id}')">`;
 	html += '<option>--Select--</option>';
 	html += '<option>Faculty</option>';
 	html += '<option>Student</option>';
@@ -430,7 +445,7 @@ function add_person()
 	html += '</td>';
 
 	html += '<td>';
-	html += `<select class="form-control" id="${speaker_select_id}" onChange="check_presenter('${speaker_select_id}','${email_id}','${role}','${tshirt_id}')">`;
+	html += `<select class="form-control form-select-sm" id="${speaker_select_id}" onChange="check_presenter('${speaker_select_id}','${email_id}','${role}','${tshirt_id}')">`;
 	html += '<option>--Select--</option>';
 	html += '<option value=yes>Yes</option>';
 	html += '<option value=no>No</option>';
@@ -438,7 +453,7 @@ function add_person()
 	html += '</td>';
 
 	html += '<td>';
-	html += `<input id="${email_id}" size=20 class="form-control"></input>`;
+	html += `<input id="${email_id}" size=20 class="form-control form-control-sm"></input>`;
 	html += '</td>';
 
 	//T-shirt sizes not needed 11-Dec-2023
@@ -461,15 +476,59 @@ function add_person()
 	html += '</select>';
 	html += '</td>';
 	*/
+
+
+	//support
+	html += `<td>
+
+	<div class="dropdown">
+		<button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="support_dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+			Select
+		</button>
+			<ul class="dropdown-menu p-1" aria-labelledby="support_dropdown">
+				<li><small><input type=checkbox id=${get_prefix(people_count,'frost_scholar')}> Frost Support</small>
+				<li><small><input type=checkbox id=${get_prefix(people_count,'santa_rosa')}> Santa Rosa Creek Foundation</small>
+			</ul>
+		</div>
+	</td>`;
+
 	
-	
+	/*
 	html += '<td>';
-	html += '<select class="form-control" id=' + get_prefix(people_count,'frost_scholar') + '>';
+	html += '<select class="form-control form-select-sm" id=' + get_prefix(people_count,'frost_scholar') + '>';
 	html += '<option>--Select--</option>';
 	html += '<option value=yes>Yes</option>';
 	html += '<option value=no>No</option>';
 	html += '</select>';
 	html += '</td>';
+
+
+	html += '<td>';
+	html += '<select class="form-control form-select-sm" id=' + get_prefix(people_count,'santa_rosa') + '>';
+	html += '<option>--Select--</option>';
+	html += '<option value=yes>Yes</option>';
+	html += '<option value=no>No</option>';
+	html += '</select>';
+	html += '</td>';
+	*/
+
+	//previous conferences
+
+	html += `<td>
+
+	<div class="dropdown">
+		<button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="experience_dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+			Select
+		</button>
+			<ul class="dropdown-menu p-1" aria-labelledby="experience_dropdown">
+				<li><small><input type=checkbox id=${get_prefix(people_count,'attended_sci_conf')}> Attended one</small>
+				<li><small><input type=checkbox id=${get_prefix(people_count,'presented_sci_conf')}> Presented at one</small>
+			</ul>
+		</div>
+	</td>`;
+
+
+
 	
 	html += '<td>';
 	html += '<i style="color: #ff5555;" class="fa-regular fa-circle-xmark" onclick="remove_person(' + people_count + ');"></i>';
@@ -648,9 +707,26 @@ function go(action)
 		var rep = get_value(i,'faculty_rep');
 		var speaker = get_value(i,'speaker');
 		var frost = get_value(i,'frost_scholar');
+		var santa_rosa = get_value(i,'santa_rosa');
+		var attended_sci_conf = get_value(i,'attended_sci_conf');
+		var presented_sci_conf = get_value(i,'presented_sci_conf');
+		
+		//console.log(`attended=${attended_sci_conf},presented=${presented_sci_conf}`);
+
 		//var tshirt = get_value(i,'tshirt');
 		//var line = {'name': name,'email': email,'affiliation': affil,'other_affiliation': other_affil, 'role': rep, 'speaker': speaker, 'frost':frost,'tshirt':tshirt};
-		var line = {'name': name,'email': email,'affiliation': affil,'other_affiliation': other_affil, 'role': rep, 'speaker': speaker, 'frost':frost};
+		var line = {'name': name,
+					'email': email,
+					'affiliation': affil,
+					'other_affiliation': other_affil, 
+					'role': rep, 
+					'speaker': speaker, 
+					'frost':frost,
+					'santa_rosa': santa_rosa,
+					'attended_sci_conf': attended_sci_conf,
+					'presented_sci_conf': presented_sci_conf		
+				};
+
 		if (rep == 'Student')
 			has_student = true;
 		if (rep == 'Faculty')
@@ -763,8 +839,7 @@ function go(action)
 	
 }
 
-
-
-
 </script>
+
+
 

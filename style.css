@@ -1,5 +1,5 @@
 body {
- background-color: #fffff;
+ background-color: #ffffff;
  margin-left: 1cm;
  font-family: Lucida Grande, Verdana, Sans-serif;
  font-size: 14pt;
@@ -66,6 +66,6 @@ table, th, td {
 
 .other_affil
 {
-    visiblity: visible;
+    visibility: visible;
 }
     
