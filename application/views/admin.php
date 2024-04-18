@@ -34,6 +34,11 @@ echo "<li>" . anchor("start/getemails/cp_fac_only","Cal Poly Faculty supervisors
 
 echo "</ul>";
 
+echo "<li class=\"list-group-item\">" . anchor("start/dept/$year","Get poster distribution by departments");
+
+
+
+
 
 echo "<li class=\"list-group-item\">" . anchor("start/tshirts/$year","Get T-shirt sizes");
 

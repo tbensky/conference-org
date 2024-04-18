@@ -276,4 +276,12 @@ EOT;
 
 	}
 
+	public function dept($year)
+	{
+		$this->load->view('header');
+        $this->load->view('dept',Array("year" => $year));
+        $this->load->view('footer');
+
+	}
+
 }
