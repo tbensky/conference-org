@@ -17,7 +17,7 @@ foreach($q->result_array() as $row)
     $one = false;
     foreach($json as $p)
     {
-        if ($p['role'] == "Faculty" and $one == false)
+        if ($p['role'] == "Faculty" && $p['affiliation'] != 'Other...' && $p['affiliation'] != '--Select--' && $one == false)
             {
                 $dept = $p['affiliation'];
                 if (empty($dist[$dept]))

@@ -137,6 +137,13 @@ EOT;
 		$this->load->view('footer');
 	}
 
+	public function search($year)
+	{
+		$this->load->view('header');
+		$this->load->view('search',['year' => $year]);
+		$this->load->view('footer');
+	}
+
 	public function mobile($type,$room,$time_group)
 	{
 		$this->load->view('header');
@@ -191,10 +198,10 @@ EOT;
         $this->load->view('footer');
     }
 
-     public function order_posters()
+     public function order_posters($year)
     {
         $this->load->view('header');
-        $this->load->view('order_posters');
+        $this->load->view('order_posters',["year" => $year]);
         $this->load->view('footer');
     }
 
@@ -238,13 +245,13 @@ EOT;
 
      public function move_talk($entry_hash,$delta)
     {
-    	$q = $this->db->query("select seq from entry where entry_hash=?",$entry_hash);
+    	$q = $this->db->query("select seq from entry where entry_hash=? and format='talk;",$entry_hash);
     	$row = $q->row_array();
     	$seq = $row['seq'];
     	$new = $seq + $delta;
 
-    	$this->db->query("update entry set seq = $new where entry_hash=?",$entry_hash);
-    	$this->db->query("update entry set seq = $seq where seq = $new and entry_hash != ?",$entry_hash);
+    	$this->db->query("update entry set seq = $new where entry_hash=? and format='talk'",$entry_hash);
+    	$this->db->query("update entry set seq = $seq where seq = $new and entry_hash != ? and format='talk'",$entry_hash);
     }
 
      public function reset_talk_list()
@@ -268,6 +275,25 @@ EOT;
     	$this->db->query("update entry set place=?,time=?,time_group=? where entry_id=?",Array($place,$time,$time_group,$entry_id));
     }
 
+
+	public function get_poster_list($year)
+    {
+		echo $this->Entry->get_poster_list($year);
+    }
+
+	public function move_poster($entry_hash,$delta)
+    {
+    	$q = $this->db->query("select seq from entry where entry_hash=? and format='poster'",$entry_hash);
+    	$row = $q->row_array();
+    	$seq = $row['seq'];
+    	$new = $seq + $delta;
+
+    	$this->db->query("update entry set seq = $new where entry_hash=? and format='poster'",$entry_hash);
+    	$this->db->query("update entry set seq = $seq where seq = $new and entry_hash != ? and format='poster'",$entry_hash);
+    }
+
+
+
 	public function tshirts($year)
 	{
 		$this->load->view('header');
@@ -281,7 +307,27 @@ EOT;
 		$this->load->view('header');
         $this->load->view('dept',Array("year" => $year));
         $this->load->view('footer');
+	}
+
+
+	public function concise_posters($year)
+	{
+		$this->load->view('header');
+        $this->load->view('concise_posters',Array("year" => $year));
+        $this->load->view('footer');
 
 	}
 
+
+	public function manual_order_posters($year)
+	{
+		$this->load->view('header');
+        $this->load->view('manual_order_posters',Array("year" => $year));
+        $this->load->view('footer');
+
+	}
+
+
+
+	
 }

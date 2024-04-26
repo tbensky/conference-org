@@ -325,10 +325,15 @@ function gen_preview($json)
 	{
 		$entry = $this->get_entry_parts($json);
 		$ret = "";
-	
+
+		//$ret .= "<div class='target'>";
 		
 		$ret .= "<h2>";
-		$ret .= "<code>(" . $entry['time'] . ")</code><br/>";
+	
+
+		if (!empty($entry['time']))
+			$ret .= "<code>(" . $entry['time'] . ")</code><br/>";
+
 		$ret .= "<span id=\"" . $json['entry_hash'] . "\">";
 		if (!empty($entry['seq']))
 			$ret .= "[" . $entry['seq'] . "]: ";
@@ -338,6 +343,9 @@ function gen_preview($json)
 		$ret .= "<i>" . $entry['affil'] . "</i>";
 		$ret .= "<br/><br/>";
 		$ret .= $entry['abstract'];
+
+		//$ret .= "</div>";
+
 		return($ret);
 
 	}
@@ -348,6 +356,7 @@ function gen_preview($json)
 		$ret = "";
 	
 		$ret .= "<h2>";
+		$ret .= "<div id='target'>";
 		$ret .= "<span id=\"" . $json['entry_hash'] . "\">";
 		if (!empty($entry['seq']))
 			$ret .= "[" . $entry['seq'] . "]: ";
@@ -357,18 +366,19 @@ function gen_preview($json)
 		$ret .= "<i>" . $entry['affil'] . "</i>";
 		$ret .= "<br/><br/>";
 		$ret .= $entry['abstract'];
+		$ret .= "</div>";
 		return($ret);
 
 	}
 
 	function list_all($q)
 	{
-		echo "asdfasdfsa";
 		echo "<table class='table table-hover'>";
 		foreach($q->result_array() as $row)
 		{
 			$json = $this->Entry->get_json($row['entry_hash']);
 			echo "<tr><td>";
+			echo "<div id='target'>";
 			echo anchor("start/crud_edit/" . $row['entry_hash'],'Edit',Array("class" => "btn btn-primary btn-xs"));
 			echo "&nbsp; Preview link: <input value='";
 			echo site_url("start/view/" . $row['entry_hash']);
@@ -386,6 +396,21 @@ function gen_preview($json)
 				echo '<h3><span class="label label-danger">Faculty only</span></h3>';
 			echo "<p/>";
 			echo $this->Entry->gen_preview($json);
+			echo "</div>";
+			echo "</td></tr>";
+		}
+		echo "</table>";
+	}
+
+	function list_all_search($q)
+	{
+		echo "<table class='table table-hover'>";
+		foreach($q->result_array() as $row)
+		{
+			$json = $this->Entry->get_json($row['entry_hash']);
+			echo "<tr class='target'><td>";
+			
+			echo $this->Entry->gen_preview_mobile($json);
 			echo "</td></tr>";
 		}
 		echo "</table>";
@@ -489,6 +514,38 @@ function gen_preview($json)
  		echo "</select>";
  	}
 
+	function get_place_color($place)
+	{
+		$colors = ["Salmon","Pink","Plum","PaleGreen","Turquoise"];
+		$pc = [];
+		$c = 0;
+		$places = $this->Setting->get("places");
+		foreach(explode(",",$places) as $p)
+		{
+			$pc[$p] = $colors[$c];
+			$c++;	
+		}
+		return($pc[$place]);
+
+	}
+
+	function get_time_group_color($time_group)
+	{
+		if (empty($time_group))
+			return("white");
+		$colors = ["DeepSkyBlue","Tan","Silver"];
+		$tgc = [];
+		$c = 0;
+		$tgs = $this->Setting->get("time_groups");
+		foreach(explode(",",$tgs) as $tg)
+		{
+			$tgc[$tg] = $colors[$c];
+			$c++;	
+		}
+		return($tgc[$time_group]);
+
+	}
+
 	function get_talk_list($year)
 	{
 		$q = $this->db->query("select * from entry where year=? and format='talk' order by seq asc",Array($year));
@@ -501,11 +558,12 @@ function gen_preview($json)
 			foreach($json as $p)
 				array_push($affil,$p['affiliation']);
 			$affil = array_unique($affil);
-			echo "<tr><td>";
+			echo "<tr bgcolor='" . $this->get_place_color($row['place']) . "'><td>";
 			echo $row['seq'] . ": ";
-			echo "<button onclick=up('" . $row['entry_hash'] . "')>Up</button>";
+			echo "<br/>";
+			echo "<button class='btn btn-outline-primary btn-sm' onclick=up('" . $row['entry_hash'] . "')><i class='fa-solid fa-arrow-up'></i></button>";
 			echo " ";
-			echo "<button onclick=down('" . $row['entry_hash'] . "')>Down</button>";
+			echo "<button class='btn btn-outline-primary btn-sm' onclick=down('" . $row['entry_hash'] . "')><i class='fa-solid fa-arrow-down'></i></button>";
 			echo "</td>";
 			echo "<td>";
 			echo $row['talk_avail'];
@@ -518,7 +576,8 @@ function gen_preview($json)
 			$this->time_dropdown($row['entry_id'],$row['time']);
 			echo "</td>";
 
-			echo "<td>";
+			//echo "<td bgcolor='" . $this->get_time_group_color($row['time_group']) . "'>";
+			echo "<td style='background:" . $this->get_time_group_color($row['time_group']) . "'>";
 			$this->time_group_dropdown($row['entry_id'],$row['time_group']);
 			echo "</td>";
 
@@ -550,6 +609,73 @@ function gen_preview($json)
 		}
 		echo "</table>";
 	}
+
+
+
+	//SRCF = santa rosa creek foundation
+	function get_poster_list($year)
+	{
+		$q = $this->db->query("select * from entry where year=? and format='poster' order by seq asc",Array($year));
+		echo "<table class='table table-sm'>";
+		echo "<thead><tr><td>Control</td><td>Faculty</td><td>Dept</td><td>Title</td><td>SRCF</td></tr></thead>";
+		foreach($q->result_array() as $row)
+		{
+			$json = json_decode($row['people'],true);
+			$srcf = 0;
+			foreach($json as $p)
+				{
+					if ($p['santa_rosa'] == 'yes')
+						$srcf++;
+				}
+
+			$one = false;
+			foreach($json as $p)
+			{
+				if ($p['role'] == "Faculty" && $p['affiliation'] != 'Other...' && $p['affiliation'] != '--Select--' && $one == false)
+					{
+						$name = $p['name'];
+						$dept = $p['affiliation'];
+						$one = true; 
+					}
+			}
+			
+			echo "<tr>";
+			echo "<td>";
+			
+			echo "<br/>";
+			echo '<div class="btn-group align-top" role="group" aria-label="Basic example">';
+			echo $row['seq'] . ": ";
+			echo "<button class='btn btn-outline-primary btn-sm align-top' onclick=poster_delta('" . $row['entry_hash'] . "',-1)><i class='fa-solid fa-arrow-up'></i></button>";
+			echo "<button class='btn btn-outline-primary btn-sm' onclick=poster_delta('" . $row['entry_hash'] . "',1)><i class='fa-solid fa-arrow-down'></i></button>";
+			echo "<button class='btn btn-outline-primary btn-sm align-top' onclick=poster_delta('" . $row['entry_hash'] . "',-5)><i class='fa-solid fa-arrow-up'></i>5</button>";
+			echo "<button class='btn btn-outline-primary btn-sm' onclick=poster_delta('" . $row['entry_hash'] . "',5)><i class='fa-solid fa-arrow-down'></i>5</button>";
+			
+			echo '</div>';
+			echo "</td>";
+			
+			echo "<td>";
+			echo $name;
+			echo "</td>";
+
+			echo "<td>";
+			echo substr($dept,0,10);
+			echo "</td>";
+
+
+			echo "<td>";
+			echo "<small>" . substr($row['title'],0,30) . "</small>";
+			echo "</td>";
+
+			echo "<td>";
+			if ($srcf)
+				echo "<b><font color=red>Yes</font></b>";
+			else echo "No";
+			echo "</td>";
+			echo "</tr>";
+		}
+		echo "</table>";
+	}
+
 
 	function get_talk_list_rtf()
 	{
@@ -648,6 +774,7 @@ function gen_preview($json)
 
 	 public function reset_poster_order()
     {
+		return; //not sure we want to do this after new poster sort by dept. 4/23/2024 at Harbor Town Outlet mall
     	if ($this->Setting->get('poster_order') == 'off' || $this->Setting->get('poster_order') == 'false' || $this->Setting->get('poster_order') === false)
     		return;
     	$year = $this->Setting->get("year");
@@ -682,14 +809,14 @@ function gen_preview($json)
     				$place = $row['place'];
     				$time = $row['time'];
     				$time_group = $row['time_group'];
-    				$z = anchor("start/mobile/" . $row['format'] . "/" . $place . "/" . $time_group . "/#" . $row['entry_hash'],$line,Array("class" => "btn btx-xs btn-primary"));
+    				$z = anchor("start/mobile/" . $row['format'] . "/" . $place . "/" . $time_group . "/#" . $row['entry_hash'],$line,Array("class" => "btn btn-sm btn-primary"));
     			}
     			else
     			{
     				$place = "all";
     				$time = "all";
     				$time_group = "all";
-    				$z = anchor("start/mobile/" . $row['format'] . "/" . $place . "/" . $time_group . "/#" . $row['entry_hash'],$line,Array("class" => "btn btx-xs btn-info"));
+    				$z = anchor("start/mobile/" . $row['format'] . "/" . $place . "/" . $time_group . "/#" . $row['entry_hash'],$line,Array("class" => "btn btn-sm btn-info"));
     			}
     			
     			if (empty($idx[$name]))

@@ -12,7 +12,7 @@ $rooms = $this->Setting->get("places");
 $time_groups = $this->Setting->get("time_groups");
 $this->Entry->reset_poster_order();
 
-
+$qr = base_url() . "assets/2014_qrcode.png";
 
 
 if ($type == "talk" && $room == "all" && $time_group == "all")
@@ -35,7 +35,7 @@ else if ($type == "poster" && $room == "all" && $time_group == "all")
 	echo anchor("start/mobile/menu/all/all","Return",Array("class" => "btn btn-primary btn-lg"));
 	echo "</center>";
 	echo "<h1>Posters</h1>";
-	$q = $this->db->query("select * from entry where format='poster' and year=?",Array($year));
+	$q = $this->db->query("select * from entry where format='poster' and year=? order by seq asc",Array($year));
 	$this->Entry->mobile_list_all($q);
 	echo "<hr/>";
 	echo "<center>";
@@ -48,9 +48,9 @@ else if ($type == "menu" && $room == "all" && $time_group == "all")
 	$logo = base_url("assets/cp_logo_sm.png");
 	echo "<br/>";
 	echo "<center>";
-	echo "<img src=$logo class='img-responsive'>";
+	echo "<img src=$logo class='img-fluid'>";
 	echo "<br/>";
-	echo "<h3>$year Student Research Conference</h3><hr/>";
+	echo "<h3 class='mt-3 fw-bold fs-2' style='color: #004022'>$year Student Research Conference</h3><hr/>";
 	echo "<div class='row justify-content-center'>";
 	echo "<div class='col-md-6 col-md-offset-3 text-left'>";
 	echo $this->Setting->get("summary");
@@ -86,13 +86,16 @@ else if ($type == "menu" && $room == "all" && $time_group == "all")
 	echo "<h2>Other</h2>";
 	echo "<small class='text-muted'>(Tap to see/hide.)</small>";
 
+	$search = anchor("start/search/year",'<i class="fa-solid fa-magnifying-glass"></i>',["class" => "btn btn-lg btn-primary"]);
+
 	echo <<<EOT
 	<div id="my_group">
 	
 		<div class="btn-group" role="group" aria-label="Basic example">	
-				<button class="btn btn-secondary btn-lg" type="button" data-toggle="collapse" data-target="#collapseIndex" data-parent="#my_group" aria-expanded="false" aria-controls="collapseExample">Index</button>
-				<button class="btn btn-warning btn-lg" type="button" data-toggle="collapse" data-target="#collapseResources" data-parent="#my_group" aria-expanded="false" aria-controls="collapseExample">Resources</button>
-				<button class="btn btn-info	 btn-lg" type="button" data-toggle="collapse" data-target="#collapseQR" data-parent="#my_group" aria-expanded="false" aria-controls="collapseExample">Mobile Program QR code</button>
+				<button class="btn btn-lg btn-secondary text-nowrap" type="button" data-bs-toggle="collapse" data-bs-target="#collapseIndex" data-parent="#my_group" aria-expanded="false" aria-controls="collapseExample">Index</button>
+				<button class="btn btn-lg btn-warning text-nowrap" type="button" data-bs-toggle="collapse" data-bs-target="#collapseResources" data-parent="#my_group" aria-expanded="false" aria-controls="collapseExample">Resources</button>
+				<button class="btn btn-lg btn-info text-nowrap" type="button" data-bs-toggle="collapse" data-bs-target="#collapseQR" data-parent="#my_group" aria-expanded="false" aria-controls="collapseExample"><i class="fa-solid fa-qrcode"></i></button>
+				$search
 		</div>
 	
 		</p>
@@ -131,10 +134,15 @@ echo <<<EOT1
 
 
 		<div class="collapse" id="collapseQR">
-	  		<div class="card card-body">
-	  		<center>
-	  		<img src='https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=https://conference.csm.calpoly.edu/mobile&choe=UTF-8 title='Link to program' />
-	  		</center>
+	  		<div class='row align-items-center'>
+			<div class='col-3'></div>
+			<div class='col-6'>
+	  			<img class='img-fluid' src='$qr'>
+			</div>
+			<div class='col-3'></div>
+			</div>
+			
+			
 	  		</div>
 	  	</div>
 

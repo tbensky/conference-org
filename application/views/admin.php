@@ -44,6 +44,14 @@ echo "<li class=\"list-group-item\">" . anchor("start/tshirts/$year","Get T-shir
 
 echo "<li class=\"list-group-item\">" . anchor("start/order_talks/$year","Order the talks") . " (Load " . anchor("start/order_talks_rtf","this file") . " into Word when done.)";;
 
+echo "<li class=\"list-group-item\">" . anchor("start/order_posters/$year","Order the posters (by dept)");
+echo "<br/>(Orders posters by dept of faculty advisor for grouping of dept. during poster session.)";
+
+echo "<li class=\"list-group-item\">" . anchor("start/manual_order_posters/$year","Manual poster ordering");
+
+echo "<li class=\"list-group-item\">" . anchor("start/concise_posters/$year","Posters ordering report");
+echo "<br/>(Prints ordered map of posters for 180-walkthrough/planning.)";
+
 echo "<li class=\"list-group-item\"> Student names and departments for: " . anchor("start/names_and_depts/poster","Posters") . ", " . anchor("start/names_and_depts/talk","Talks");
 
 echo "<li class=\"list-group-item\">" . anchor("start/book/$year","Generate book");

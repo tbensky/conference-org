@@ -4,16 +4,19 @@
 
 echo "<div class='container'>";
 echo "<div class='row'>";
-
+echo "<div class='col'>";
 echo $this->Misc->nav_dropdown();
+
+
+echo "<button class='btn btn-secondary' onclick='reset()'>Reset order</button>";
+
+echo "<br/>";
+echo "(Load " . anchor("start/order_talks_rtf","this file") . " into Word when done.)";
+echo "</div>";
+
 echo "<br/><br/>";
 
-echo "<button onclick='reset()'>Reset order</button>";
-echo "&nbsp;(Load " . anchor("start/order_talks_rtf","this file") . " into Word when done.)";
-
-echo "<br/><br/>";
-
-echo "<div id='talks'></div>";
+echo "<div class='mt-5' id='talks'></div>";
 
 
 echo "</div>";
@@ -44,6 +47,9 @@ function update()
 function reset()
 {
 	var url = '<?php echo site_url(); ?>' + "/start/reset_talk_list";
+
+	if (confirm("Are you sure?") == false)
+		return;
 
 	$.ajax({
 	  type: "POST",

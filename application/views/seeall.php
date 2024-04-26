@@ -13,7 +13,7 @@ $q = $this->db->query("select * from entry where format='talk' and year=? order 
 $this->Entry->list_all($q);
 
 echo "<h1>Posters</h1>";
-$q = $this->db->query("select * from entry where format='poster' and year=?",[$year]);
+$q = $this->db->query("select * from entry where format='poster' and year=? order by seq asc",[$year]);
 $this->Entry->list_all($q);
 
 
