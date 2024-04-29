@@ -15,6 +15,8 @@ $posters_due = $this->Setting->get('posters_due');
 $cover_art_submit = $this->Setting->get('cover_art_submit');
 $cover_art_deadline = $this->Setting->get('cover_art_deadline');
 $more_events = $this->Setting->get('more_events');
+$qr = base_url() . "assets/2014_qrcode.png";
+
 
 $logo = base_url("assets/cp_logo.png");
 
@@ -59,7 +61,7 @@ echo <<<EOT
 
 	
   <center>
-  <h2 class="display-6 m-5"><strong>$year Research Conference<br/>$dates</strong></h2>
+  <h2 class="display-6 m-5 fw-bold">$year Research Conference<br/>$dates</h2>
 
   </center>
 EOT;
@@ -74,9 +76,17 @@ if ($this->Setting->get('show_program_link') == 'true')
 	echo "</h3></span>";
 	echo "<hr/>";
 	echo "<h4>";
-	echo "<a href=" . $this->Setting->get('program_link') . ">" . $this->Setting->get('program_link_desc') . "</a>";
+	echo "<a class='fs-2' href=" . $this->Setting->get('program_link') . ">" . $this->Setting->get('program_link_desc') . "</a>";
 	echo "</h4>";
-	echo "<img src='https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=https://conference.csm.calpoly.edu/mobile&choe=UTF-8 title='Link to program' />";
+echo<<<QR
+	<div class='row align-items-center mt-5'>
+			<div class='col-3'></div>
+			<div class='col-6'>
+	  			<img class='img-fluid' src='$qr'>
+			</div>
+			<div class='col-3'></div>
+			</div>
+QR;
 	echo "</center>";
 	return;
 }

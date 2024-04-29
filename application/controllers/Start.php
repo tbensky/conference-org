@@ -293,6 +293,44 @@ EOT;
     }
 
 
+	public function group_move_poster($year,$cmd)
+    {
+		$nums = explode("-",$cmd);
+		$after = $nums[0];
+		$to_move = [];
+		for($i=1;$i<count($nums);$i++)
+			$to_move[$i-1] = $nums[$i];
+		$len = count($to_move);
+
+		//take out entries to be moved
+		foreach($to_move as $entry)
+			$this->db->query("update entry set seq=-seq where year=? and format='poster' and seq = ?",[$year,$entry]);
+
+		//open up the hole
+		$this->db->query("update entry set seq=seq+? where year=? and format='poster' and seq > ?",[$len,$year,$after]);
+
+		//put to move entries into the hole
+		$new_seq = $after + 1;
+		foreach($to_move as $entry)
+		{
+			$this->db->query("update entry set seq=? where year=? and format='poster' and seq = ?",[$new_seq,$year,-$entry]);
+			echo $this->db->last_query() . "<br/>";
+			$new_seq++;
+		}
+
+		//get them all renumbered
+		$seq = 1;
+		$q = $this->db->query("select * from entry where format='poster' and year=? order by seq asc",[$year]);
+		foreach($q->result_array() as $row)
+		{
+			$this->db->query("update entry set seq=? where year=? and format='poster' and entry_hash = ?",[$seq,$year,$row['entry_hash']]);
+			$seq++;
+		}
+
+	}
+
+
+
 
 	public function tshirts($year)
 	{
@@ -323,6 +361,14 @@ EOT;
 	{
 		$this->load->view('header');
         $this->load->view('manual_order_posters',Array("year" => $year));
+        $this->load->view('footer');
+
+	}
+
+	public function stats($year)
+	{
+		$this->load->view('header');
+        $this->load->view('stats',Array("year" => $year));
         $this->load->view('footer');
 
 	}

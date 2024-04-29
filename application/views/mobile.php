@@ -32,9 +32,22 @@ if ($type == "talk" && $room == "all" && $time_group == "all")
 else if ($type == "poster" && $room == "all" && $time_group == "all")
 {
 	echo "<center>";
-	echo anchor("start/mobile/menu/all/all","Return",Array("class" => "btn btn-primary btn-lg"));
+	echo "<h4>Poster search</h4>";
+
+	echo "<div class='row'>";
+	echo "<div class='col-2'>";
+	echo anchor("start/mobile/menu/all/all","<i class='fa-solid fa-backward'></i>",["class" => "btn btn-outline-secondary"]); 
+	echo "</div>";
+
+	echo "<div class='col-10'>";
+	echo "<input type=text class=form-control id='search' onkeyup='myFunction()' placeholder='Type name, title, keyword, etc.'>";
+	echo "<div><small class='text-muted'><span id='record_count'></span> entries below</small></div>"; 
+	echo "</div>";
+	echo "</div>";
 	echo "</center>";
+
 	echo "<h1>Posters</h1>";
+	
 	$q = $this->db->query("select * from entry where format='poster' and year=? order by seq asc",Array($year));
 	$this->Entry->mobile_list_all($q);
 	echo "<hr/>";
@@ -186,11 +199,32 @@ var anchorlink = url.split('#');
 var tag = anchorlink[1];
 highlight(tag);
 
+//for search
+var nodes = document.getElementsByClassName('target');
+$("#record_count").html(nodes.length);
+
 function highlight(id)
 {
 	var use_id = '#'+id;
 	console.log(use_id);
 	//(use_id).css('background','#ff0000');
 	$(use_id).effect("highlight", {}, 3000);
+}
+
+function myFunction() {
+  var input = document.getElementById("search");
+  var filter = input.value.toLowerCase();
+  var nodes = document.getElementsByClassName('target');
+
+  var block=0;
+  for (i = 0; i < nodes.length; i++) {
+    if (nodes[i].innerText.toLowerCase().includes(filter)) {
+      nodes[i].style.display = "block";
+      block++;
+    } else {
+      nodes[i].style.display = "none";
+    }
+  }
+  $("#record_count").html(block);
 }
 </script>

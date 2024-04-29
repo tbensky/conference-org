@@ -42,6 +42,8 @@ foreach($q->result_array() as $row)
 }
 
 
+/*
+//2024-Apr-29 at 70 Finiss St.: this report is generating a few extra lines at the end. maybe this is why?
 //get the rest that have no BSCM faculty affiliation
 $q = $this->db->query("select * from entry where format='poster' and year=? and seq>=$c order by seq asc",[$year]);
 foreach($q->result_array() as $row)
@@ -61,14 +63,16 @@ foreach($q->result_array() as $row)
     }
     
 }
+*/ 
 
 foreach($poster as $p)
 {
-    echo "<b>" . $p['seq'] . "</b>" . ": " . $p['dept'] . " (" . $p['faculty'] . ")";
+    echo "<b>" . $p['seq'] . "</b>: " . $p['dept'] . " (" . $p['faculty'] . "), " . substr($p['title'],0,50);
     if ($p['santa_rosa'])
         echo " <b>*SRCF support*</b>";
     echo "<br/>";
 }
+
 
 
 $this->Misc->nav_dropdown();

@@ -356,7 +356,6 @@ function gen_preview($json)
 		$ret = "";
 	
 		$ret .= "<h2>";
-		$ret .= "<div id='target'>";
 		$ret .= "<span id=\"" . $json['entry_hash'] . "\">";
 		if (!empty($entry['seq']))
 			$ret .= "[" . $entry['seq'] . "]: ";
@@ -366,7 +365,6 @@ function gen_preview($json)
 		$ret .= "<i>" . $entry['affil'] . "</i>";
 		$ret .= "<br/><br/>";
 		$ret .= $entry['abstract'];
-		$ret .= "</div>";
 		return($ret);
 
 	}
@@ -377,8 +375,7 @@ function gen_preview($json)
 		foreach($q->result_array() as $row)
 		{
 			$json = $this->Entry->get_json($row['entry_hash']);
-			echo "<tr><td>";
-			echo "<div id='target'>";
+			echo "<tr class='target'><td>";
 			echo anchor("start/crud_edit/" . $row['entry_hash'],'Edit',Array("class" => "btn btn-primary btn-xs"));
 			echo "&nbsp; Preview link: <input value='";
 			echo site_url("start/view/" . $row['entry_hash']);
@@ -396,7 +393,6 @@ function gen_preview($json)
 				echo '<h3><span class="label label-danger">Faculty only</span></h3>';
 			echo "<p/>";
 			echo $this->Entry->gen_preview($json);
-			echo "</div>";
 			echo "</td></tr>";
 		}
 		echo "</table>";
@@ -436,7 +432,7 @@ function gen_preview($json)
 		foreach($q->result_array() as $row)
 		{
 			$json = $this->Entry->get_json($row['entry_hash']);
-			echo "<tr><td>";
+			echo "<tr class='target'><td>";
 			echo $this->Entry->gen_preview_mobile_poster($json);
 			echo "</td></tr>";
 		}

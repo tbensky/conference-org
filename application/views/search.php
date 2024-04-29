@@ -5,7 +5,7 @@ echo "<div class='container'>";
 echo "<div class='row'>";
 
 echo "<center>";
-echo "<h4>Program search</h4>";
+echo "<h4>Full program search</h4>";
 
 echo "<div class='row'>";
 echo "<div class='col-2'>";

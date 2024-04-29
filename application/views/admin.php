@@ -44,13 +44,27 @@ echo "<li class=\"list-group-item\">" . anchor("start/tshirts/$year","Get T-shir
 
 echo "<li class=\"list-group-item\">" . anchor("start/order_talks/$year","Order the talks") . " (Load " . anchor("start/order_talks_rtf","this file") . " into Word when done.)";;
 
-echo "<li class=\"list-group-item\">" . anchor("start/order_posters/$year","Order the posters (by dept)");
-echo "<br/>(Orders posters by dept of faculty advisor for grouping of dept. during poster session.)";
 
-echo "<li class=\"list-group-item\">" . anchor("start/manual_order_posters/$year","Manual poster ordering");
+echo "<li class=\"list-group-item\"><h4>Poster ordering</h4>";
+echo "Approach to poster ordering: group by department, and randomly by faculty advisor with a dept.<br/>";
+echo "<h5>Tools</h5>";
+echo "<ul>";
+echo "<li>" .  anchor("start/order_posters/$year","Order the posters (by dept)",["onclick" => "return confirm('Are you sure? This will reset any poster ordering currently in place.')"]);
+echo "<br/><ul><small><li>Do initial ordering of posters by dept of faculty advisor.<li>*Caution* Will reset any current poster ordering.</ul></small>";
 
-echo "<li class=\"list-group-item\">" . anchor("start/concise_posters/$year","Posters ordering report");
-echo "<br/>(Prints ordered map of posters for 180-walkthrough/planning.)";
+echo "<li>";
+echo anchor("start/manual_order_posters/$year","Manual poster ordering");
+echo "<br/><small>Do manaual ordering of posters as needed.";
+echo "<ul><li> Examples: <ul><li>Requests by faculty to group posters<li>Distributing SRCF (Santa Rosa Creek Foundation) posters</ul></ul></small>";
+
+
+echo "<li>" . anchor("start/concise_posters/$year","Posters ordering report");
+echo "<br/><ul><li><small>Prints ordered map of posters for 180-walkthrough/planning.</small></ul>";
+
+echo "</ul>";
+
+echo "<li class=\"list-group-item\">" . anchor("start/stats/$year","Get first conference statistics");
+
 
 echo "<li class=\"list-group-item\"> Student names and departments for: " . anchor("start/names_and_depts/poster","Posters") . ", " . anchor("start/names_and_depts/talk","Talks");
 
