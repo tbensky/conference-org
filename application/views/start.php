@@ -75,9 +75,19 @@ if ($this->Setting->get('show_program_link') == 'true')
 	echo "Submissions: " . $ret['talks'] . " talks and " . $ret['posters'] . " posters.";
 	echo "</h3></span>";
 	echo "<hr/>";
+
+	echo "<h5>";
+	echo $this->Setting->get('posters_due');
+	echo "</h5>";
+
+	echo "<hr/>";
+
 	echo "<h4>";
 	echo "<a class='fs-2' href=" . $this->Setting->get('program_link') . ">" . $this->Setting->get('program_link_desc') . "</a>";
 	echo "</h4>";
+
+
+
 echo<<<QR
 	<div class='row align-items-center mt-5'>
 			<div class='col-3'></div>
@@ -379,6 +389,8 @@ function update_submission()
 			html += '<input class=poster_avail type=checkbox id=poster_avail value="We know how to make one"> We know how to make a poster, and do not need to attend the workshop.<br/>';
 			html += '<input class=poster_avail type=checkbox id=poster_avail value="We can attend <?php echo $poster_ws_date; ?>"> We can attend a poster workshop on <?php echo $poster_ws_date; ?><br/>';
 			html += '<input class=poster_avail type=checkbox id=poster_avail value="We would like to attend a workshop but CANNOT attend on Tuesday April 19, 5:10-6pm">We would like to attend a workshop but CANNOT attend on <?php echo $poster_ws_date; ?><br/>';
+			html += '<input class=poster_avail type=checkbox id=poster_avail value="We will need to have a poster printed"> We will need to have a poster printed<br/>';
+
 			$('#other_notes').html(html);
 			$('#submission_type').html("poster");
 			break;
