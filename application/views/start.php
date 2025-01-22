@@ -128,7 +128,6 @@ echo<<<EOT1
 
 <li class="list-group-item"><i class="fa-regular fa-circle-check"></i> $posters_due</li>
 
-<li class="list-group-item"><i class="fa-regular fa-circle-check"></i> Enter the <a href=$cover_art_submit target=_blank>Cover Art Contest</a>.  $cover_art_deadline
 
 $more_events
 </ul>
@@ -385,11 +384,11 @@ function update_submission()
 			html += 'A poster workshop is offered each year, to help you make your poster.  Please help us to organize this:'
 			html += '<div id="note">(Note: Posters should be 4\' wide by 3\' tall.  For the workshop meet in Fisher Science (building 33), outside the Biology Museum, 33-285.)</div>';
 			html += '<p/>';
+			html += '<input class=poster_avail type=checkbox id=poster_avail value="We will need to have a poster printed"> We will need to have a poster printed<br/>';
 			html += '<input class=poster_avail type=checkbox id=poster_avail value="We have one already"> We already have a poster used in another conference<br/>';
 			html += '<input class=poster_avail type=checkbox id=poster_avail value="We know how to make one"> We know how to make a poster, and do not need to attend the workshop.<br/>';
 			html += '<input class=poster_avail type=checkbox id=poster_avail value="We can attend <?php echo $poster_ws_date; ?>"> We can attend a poster workshop on <?php echo $poster_ws_date; ?><br/>';
-			html += '<input class=poster_avail type=checkbox id=poster_avail value="We would like to attend a workshop but CANNOT attend on Tuesday April 19, 5:10-6pm">We would like to attend a workshop but CANNOT attend on <?php echo $poster_ws_date; ?><br/>';
-			html += '<input class=poster_avail type=checkbox id=poster_avail value="We will need to have a poster printed"> We will need to have a poster printed<br/>';
+			html += '<input class=poster_avail type=checkbox id=poster_avail value="We would like to attend a workshop but CANNOT attend on <?php echo $poster_ws_date; ?>">We would like to attend a workshop but CANNOT attend on <?php echo $poster_ws_date; ?><br/>';
 
 			$('#other_notes').html(html);
 			$('#submission_type').html("poster");
