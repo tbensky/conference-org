@@ -692,10 +692,11 @@ function go(action)
 
 	if (empty(abstract) || abstract.length < 10)
 	{
-		alert("Your title is too short.");
+		alert("Your abstract is too short.");
 		return;
 	}
 
+	/*
 	if (has_unicode(abstract))
 	{
 		uni = find_unicode(abstract);
@@ -709,6 +710,7 @@ function go(action)
 		alert("Your title has special characters in it that we can't typeset..\n\n"+uni+"\n\nIf you pasted in your abstract from Word, please edit these characters directly in the title box here.  Also, see the help button.");
 		return;
 	}
+	*/
 
 
 	var name_ok = true;
