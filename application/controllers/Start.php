@@ -41,7 +41,7 @@ class Start extends CI_Controller {
 		$a = anchor("start/view/$hash","your submission link",Array('target' => '_blank'));
 		$b = urlencode($a);
 		$c = site_url("start/view/$hash");
-		$qr = "<img src='https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" . $b . "&choe=UTF-8 title='Link to your submission' />";
+		$qr = "<img src='https://quickchart.io/qr?format=png&size=300&text=" . $b . "&choe=UTF-8 title='Link to your submission' />";
 		echo <<<EOT
 		<div class="alert alert-success">
 		<center>
