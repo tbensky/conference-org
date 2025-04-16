@@ -373,6 +373,15 @@ EOT;
 
 	}
 
+		public function posterupload()
+	{
+		$this->load->view('header');
+        $this->load->view('posterupload');
+        $this->load->view('footer');
+
+	}
+
+
 
 
 	
