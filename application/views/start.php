@@ -114,15 +114,18 @@ $symbol_help = 'For typsetting purposes, special symbols are in the form of code
 ';
 
 
+if ($deadline == "true")
+		$ab_line == "";
+else $ab_line = "<li class='list-group-item'><i class='fa-regular fa-circle-check'></i> $submission_deadline. <code>$days_msg</code></li>";
+
+
 echo<<<EOT1
-
-
 
   <ul class="list-group mb-5">
 
   <li class="list-group-item active"> Important Dates</li>
 
-<li class="list-group-item"><i class="fa-regular fa-circle-check"></i> $submission_deadline. <code>$days_msg</code></li>
+  $ab_line
 
 <li class="list-group-item"><i class="fa-regular fa-circle-check"></i> $poster_ws</li>
 

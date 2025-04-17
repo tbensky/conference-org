@@ -52,7 +52,7 @@ switch($how)
             break; 
     case 'cp_fac_only':
             $q = $this->db->query("select * from entry where year=?",[$year]);
-            $title = "Emails of CP faculty only (no students or outside advisors";
+            $title = "Emails of CP faculty only (no students or outside advisors)";
             $students_only = false;
             $fac_only = true;
             break; 
@@ -63,33 +63,34 @@ foreach($q->result_array() as $row)
     $people = json_decode($row['people'],true);
     foreach($people as $p)
     {
-        if (!empty($p['email']) && $students_only === false && $fac_only == false)
+        if (!empty($p['email']) && $students_only === false && $fac_only === false)
         {
             $r .= trim(strtolower($p['email'])) . "\n";
             $c++;
         }
-        else if (!empty($p['email']) && $students_only === true && $fac_only == false && $p['role'] == "Student")
+        else if (!empty($p['email']) && $students_only === true && $fac_only === false && $p['role'] == "Student")
              {
                 $r .= trim(strtolower($p['email'])) . "\n";
                 $c++;
             }
-        else if (!empty($p['email']) && $students_only === false && $fac_only == true && $p['role'] == "Faculty" && $p['affiliation'] != "Other...")
+        else if (!empty($p['email']) && $students_only === false && $fac_only === true && $p['role'] != 'Student') //($p['role'] == "Faculty" || $p['role'] == 'Other') // && $p['affiliation'] != "Other...")
              {
-                $r .= trim(strtolower($p['email'])) . "\n";
+                //$r .= trim(strtolower($p['email'])) . "," . $row['format'] . "\n";
+                $r .= $p['email'] . "," . $row['format'] . "\n";
                 $c++;
             }
     }
 }
 
+$unique = count(array_unique(explode("\n",$r)));
 $r = implode("\n",array_unique(explode("\n",$r)));
 
 
 echo "<h2>$title</h2>";
 
-echo $c . " emails";
+echo $unique . " unique emails";
 echo "<br/>";
 echo "<textarea rows=30 cols=40>$r</textarea>";
-
 echo "</div></div>";
 
 ?>
