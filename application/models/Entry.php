@@ -832,6 +832,12 @@ function gen_preview($json)
     	}
     	echo "</table>";
     }
+
+	function room_is_empty($year,$place,$time_group)
+	{
+		$q = $this->db->query("select * from entry where place=? and time_group=? and year=?",[$place,$time_group,$year]);
+		return $q->num_rows() == 0;
+	}
 }
 
 

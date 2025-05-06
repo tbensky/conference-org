@@ -18,6 +18,7 @@ echo "<li>" . anchor("start/crud/poster","Posters only");
 echo "</ul>";
 
 echo "<li class=\"list-group-item\">" . anchor("start/seeall","Preview all entries");
+echo "<li class=\"list-group-item\">" . anchor("start/download_all","Download CSV of all entries");
 
 echo "<li class=\"list-group-item\">" . anchor("start/mobile/menu/all/all","Mobile program");
 
@@ -28,6 +29,7 @@ echo "<li>" . anchor("start/getemails/talks","All talks");
 echo "<li>" . anchor("start/getemails/posters","All posters");
 echo "<li>" . anchor("start/getemails/posters_to_print","Posters that need printing"); 
 echo "<li>" . anchor("start/getemails/students_giving_talks","Students giving talks (without faculty advisors)"); 
+echo "<li>" . anchor("start/getemails/students_giving_talks_speakers","Students giving talks (speakers only) (without faculty advisors)"); 
 echo "<li>" . anchor("start/getemails/students_giving_posters","Students giving posters (without faculty advisors)"); 
 echo "<li>" . anchor("start/getemails/students_giving_posters_not_printed","Students giving posters that may need to be printed (without faculty advisors)"); 
 echo "<li>" . anchor("start/getemails/cp_fac_only","Cal Poly Faculty supervisors only (of talks or posters)"); 

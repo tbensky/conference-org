@@ -58,15 +58,28 @@ if (isset($_POST['submit'])) {
 
         // Move the file from temp directory to your desired folder
 
-        if(move_uploaded_file($fileTmpPath, $dest_path)) {
-            echo "Your poster file has been successfully uploaded. No confirmation email will be sent.  Here's what we received (please check it): ";
-            $url = base_url() . "/uploads/$newFileName";
-            echo "<a href=$url target='_blank'>Your poster</a>";
-            echo "<br/>";
-            echo "Link to your poster PDF: <input type=text value='$url'>";
-        } else {
-            echo 'There was an error moving the file.';
-        }
+         // Allowed types
+         $allowedExtensions = ['pdf'];
+         $allowedMimeTypes = ['application/pdf'];
+
+         if (in_array($fileExtension, $allowedExtensions) && in_array($fileType, $allowedMimeTypes)) {
+
+                if(move_uploaded_file($fileTmpPath, $dest_path)) {
+                    echo '<i class="fa-solid fa-circle-check" style="color: #77bb41;"></i> Your poster file has been successfully uploaded.';
+                    echo "<ul>";
+                    echo "<li> No confirmation email will be sent.  ";
+                    $url = base_url() . "uploads/$newFileName";
+                    echo "<li> Here's what we received (please check it): ";
+                    echo "<a href=$url target='_blank'>Your poster</a>";
+                    echo "<li> Link to your poster PDF: <input style='font-size: 8pt' size=100 type=text value='$url'>";
+                    echo "</ul>";
+                } else {
+                    echo 'There was an error moving the file.';
+                }
+         }
+         else {
+            echo '<i class="fa-solid fa-circle-xmark" style="color: #ff4013;"></i> Please upload a PDF file.  <a href=https://conference.csm.calpoly.edu/index.php/start/posterupload>Try again</a>.';
+         }
     } else {
         echo 'No file uploaded or upload error.';
     }

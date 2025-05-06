@@ -191,6 +191,15 @@ EOT;
 		$this->load->view('book',Array('year' => $year));
     }
 
+	public function download_all()
+	{
+		$year = $this->Setting->get("year");
+		header("Content-Type: application/octet-stream");
+		header("Content-Transfer-Encoding: Binary");
+		header("Content-disposition: attachment; filename=\"bcsm$year.csv\""); 
+		$this->load->view('downloadall',Array('year' => $year));
+	}
+
     public function order_talks($year)
     {
         $this->load->view('header');
@@ -245,7 +254,7 @@ EOT;
 
      public function move_talk($entry_hash,$delta)
     {
-    	$q = $this->db->query("select seq from entry where entry_hash=? and format='talk;",$entry_hash);
+    	$q = $this->db->query("select seq from entry where entry_hash=? and format='talk'",$entry_hash);
     	$row = $q->row_array();
     	$seq = $row['seq'];
     	$new = $seq + $delta;

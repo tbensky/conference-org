@@ -19,42 +19,56 @@ switch($how)
             $title = "Talk emails";
             $students_only = false;
             $fac_only = false;
+            $speakers_only = false;
             break;
     case 'posters':
             $q = $this->db->query("select * from entry where format='poster' and year=?",[$year]);
             $title = "Poster emails";
             $students_only = false;
             $fac_only = false;
+            $speakers_only = false;
             break;
     case 'posters_to_print':
             $q = $this->db->query("select * from entry where format='poster' and poster_avail not like 'We have one%' and year=?",[$year]);
             $title = "Poster emails (likely need one printed)";
             $students_only = false;
             $fac_only = false;
+            $speakers_only = false;
             break;        
     case 'students_giving_talks':
             $q = $this->db->query("select * from entry where format='talk' and year=?",[$year]);
             $title = "Emails of students giving talks (no faculty emails)";
             $students_only = true;
             $fac_only = false;
+            $speakers_only = false;
             break; 
+        case 'students_giving_talks_speakers':
+                $q = $this->db->query("select * from entry where format='talk' and year=?",[$year]);
+                $title = "Emails of students giving talks [speakers only] (no faculty emails)";
+                $students_only = true;
+                $speakers_only = true;
+                $fac_only = false;
+                break;
     case 'students_giving_posters':
             $q = $this->db->query("select * from entry where format='poster' and year=?",[$year]);
             $title = "Emails of students giving posters (no faculty emails)";
             $students_only = true;
             $fac_only = false;
+            $speakers_only = false;
             break; 
     case 'students_giving_posters_not_printed':
             $q = $this->db->query("select * from entry where format='poster' and poster_avail not like 'We have one%' and year=?",[$year]);;
             $title = "Emails of students giving posters that potentially need printing (no faculty emails)";
             $students_only = true;
             $fac_only = false; 
+            $speakers_only = false;
             break; 
     case 'cp_fac_only':
             $q = $this->db->query("select * from entry where year=?",[$year]);
             $title = "Emails of CP faculty only (no students or outside advisors)";
             $students_only = false;
             $fac_only = true;
+            $speakers_only = false;
             break; 
 }
 
@@ -68,11 +82,16 @@ foreach($q->result_array() as $row)
             $r .= trim(strtolower($p['email'])) . "\n";
             $c++;
         }
-        else if (!empty($p['email']) && $students_only === true && $fac_only === false && $p['role'] == "Student")
+        else if (!empty($p['email']) && $students_only === true && $fac_only === false && $speakers_only === false && $p['role'] == "Student")
              {
                 $r .= trim(strtolower($p['email'])) . "\n";
                 $c++;
             }
+        else if (!empty($p['email']) && $students_only === true && $fac_only === false && $speakers_only === true && $p['role'] == "Student" && $p['speaker'] == 'yes')
+            {
+               $r .= trim(strtolower($p['email'])) . "\n";
+               $c++;
+           }
         else if (!empty($p['email']) && $students_only === false && $fac_only === true && $p['role'] != 'Student') //($p['role'] == "Faculty" || $p['role'] == 'Other') // && $p['affiliation'] != "Other...")
              {
                 //$r .= trim(strtolower($p['email'])) . "," . $row['format'] . "\n";

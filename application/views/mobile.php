@@ -84,9 +84,12 @@ else if ($type == "menu" && $room == "all" && $time_group == "all")
 			echo "<h4>$pre: $time_group</h4>";
 			foreach(explode(",",$rooms) as $room)
 			{
+				if (!$this->Entry->room_is_empty($year,$room,$time_group))
+				{
 					echo anchor("start/mobile/talk/$room/$time_group","$room",Array("class" => "btn btn-success btn-lg"));
 					echo "<br/>";
 					echo "<br/>";
+				}
 			}
 		}
 
