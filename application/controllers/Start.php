@@ -16,10 +16,17 @@ class Start extends CI_Controller {
 
 	public function index()
 	{
-		$this->load->view('header');
-		$this->load->view('start');
-		$this->load->view('footer');
+			$bounce = $this->Setting->get("bounce_to_program");
+			if ($bounce == "true")
+			{
+					header("Location: https://conference.csm.calpoly.edu/index.php/start/mobile/menu/all/all");
+					return;
+			}
+			$this->load->view('header');
+			$this->load->view('start');
+			$this->load->view('footer');
 	}
+
 
 	public function incoming()
 	{
