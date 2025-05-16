@@ -17,7 +17,8 @@ class Start extends CI_Controller {
 	public function index()
 	{
 			$bounce = $this->Setting->get("bounce_to_program");
-			if ($bounce == "true")
+			$qs = $_SERVER['QUERY_STRING'];
+			if ($bounce == "true" && empty($qs))
 			{
 					header("Location: https://conference.csm.calpoly.edu/index.php/start/mobile/menu/all/all");
 					return;

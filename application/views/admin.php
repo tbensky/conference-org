@@ -92,6 +92,8 @@ echo "<li> times=comma list of possible talk times (like 9-9:15,9:15-9:30, etc)"
 echo "<li> times_groups=comma delimited list of time spans of talks (should encompass those in times setting above, like 9-11,1-3)";
 echo "<li> summary=text of conference summary/overview";
 echo "<li> more_events=HTML code to appear under main date box on page header";
+echo "<li> summary=text of conference summary/overview";
+echo "<li> poster_map=HTML code to appear under the 'Posters' button on the mobile program";
 echo "</ul>";
 
 

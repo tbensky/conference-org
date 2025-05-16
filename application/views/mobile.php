@@ -97,6 +97,9 @@ else if ($type == "menu" && $room == "all" && $time_group == "all")
 	echo "<h2>Posters</h2>";
 
 	echo anchor("start/mobile/poster/all/all","All posters",Array("class" => "btn btn-success btn-lg"));
+	echo "<br/>";
+	$poster_map = $this->Setting->get("poster_map");
+	echo $poster_map;
 	
 	echo "<hr/>";
 	echo "<h2>Other</h2>";
