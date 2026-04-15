@@ -38,7 +38,6 @@ $poster = [];
 foreach($q->result_array() as $row)
 {
     $json = json_decode($row['people'],true);
-    $one = false;
 
     //look for santa rosa creek foundation posters
     $srcf = 0;
@@ -48,15 +47,12 @@ foreach($q->result_array() as $row)
             $srcf++;
     }
 
-    foreach($json as $p)
+    $faculty = $this->Entry->get_poster_faculty_info($json);
+    if ($faculty !== false)
     {
-        if ($p['role'] == "Faculty" && $p['affiliation'] != 'Other...' && $p['affiliation'] != '--Select--' && $one == false)
-            {
-                $name = rand() . "_" . str_replace(", ","",$p['name']);
-                $dept = $p['affiliation'];
-                $poster[$row['entry_hash']] = ["hash" => $row['entry_hash'],"dept" => $dept,"sort" => $dept . $name,"srcf" => $srcf]; //"dept" => $dept,"title" => $row['title']];
-                $one = true; 
-            }
+        $name = rand() . "_" . str_replace(", ","",$faculty['name']);
+        $dept = $faculty['order_dept'];
+        $poster[$row['entry_hash']] = ["hash" => $row['entry_hash'],"dept" => $dept,"sort" => $dept . $name,"srcf" => $srcf];
     }
     
 }

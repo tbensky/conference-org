@@ -624,15 +624,13 @@ function gen_preview($json)
 						$srcf++;
 				}
 
-			$one = false;
-			foreach($json as $p)
+			$faculty = $this->get_poster_faculty_info($json);
+			$name = "No faculty listed";
+			$dept = "Other";
+			if ($faculty !== false)
 			{
-				if ($p['role'] == "Faculty" && $p['affiliation'] != 'Other...' && $p['affiliation'] != '--Select--' && $one == false)
-					{
-						$name = $p['name'];
-						$dept = $p['affiliation'];
-						$one = true; 
-					}
+				$name = $faculty['name'];
+				$dept = $faculty['dept_display'];
 			}
 			
 			echo "<tr>";
@@ -766,6 +764,38 @@ function gen_preview($json)
 				$faculty = true;
 		}
 		return(Array('student' => $student,'faculty' => $faculty));
+	}
+
+	function get_poster_faculty_info($people)
+	{
+		foreach($people as $p)
+		{
+			if ($p['role'] != 'Faculty')
+				continue;
+
+			if (empty($p['affiliation']) || $p['affiliation'] == '--Select--')
+				continue;
+
+			if ($p['affiliation'] == 'Other...')
+			{
+				if (empty($p['other_affiliation']))
+					continue;
+
+				return(Array(
+					'name' => $p['name'],
+					'dept_display' => trim($p['other_affiliation']),
+					'order_dept' => 'Other'
+				));
+			}
+
+			return(Array(
+				'name' => $p['name'],
+				'dept_display' => $p['affiliation'],
+				'order_dept' => $p['affiliation']
+			));
+		}
+
+		return(false);
 	}
 
 	 public function reset_poster_order()
