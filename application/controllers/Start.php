@@ -260,6 +260,68 @@ EOT;
     	echo $this->Entry->get_talk_list($year);
     }
 
+    public function swap_talks($year)
+    {
+    	$first = (int)$this->input->post("first");
+    	$second = (int)$this->input->post("second");
+
+    	$this->output->set_content_type('application/json');
+
+    	if ($first < 1 || $second < 1)
+    	{
+    		echo json_encode(["success" => false, "message" => "Both talk numbers must be positive integers."]);
+    		return;
+    	}
+
+    	if ($first === $second)
+    	{
+    		echo json_encode(["success" => false, "message" => "Choose two different talk numbers."]);
+    		return;
+    	}
+
+    	$q = $this->db->query(
+    		"select entry_hash, seq from entry where year=? and format='talk' and seq in (?,?) order by seq asc",
+    		[$year,$first,$second]
+    	);
+    	$rows = $q->result_array();
+
+    	if (count($rows) !== 2)
+    	{
+    		echo json_encode(["success" => false, "message" => "One or both talk numbers were not found."]);
+    		return;
+    	}
+
+    	$first_hash = null;
+    	$second_hash = null;
+    	foreach($rows as $row)
+    	{
+    		if ((int)$row['seq'] === $first)
+    			$first_hash = $row['entry_hash'];
+    		if ((int)$row['seq'] === $second)
+    			$second_hash = $row['entry_hash'];
+    	}
+
+    	if (empty($first_hash) || empty($second_hash))
+    	{
+    		echo json_encode(["success" => false, "message" => "One or both talk numbers were not found."]);
+    		return;
+    	}
+
+    	$this->db->trans_start();
+    	$this->db->query("update entry set seq=0 where year=? and format='talk' and entry_hash=?",[$year,$first_hash]);
+    	$this->db->query("update entry set seq=? where year=? and format='talk' and entry_hash=?",[$first,$year,$second_hash]);
+    	$this->db->query("update entry set seq=? where year=? and format='talk' and entry_hash=?",[$second,$year,$first_hash]);
+    	$this->db->trans_complete();
+
+    	if ($this->db->trans_status() === false)
+    	{
+    		echo json_encode(["success" => false, "message" => "Swap failed."]);
+    		return;
+    	}
+
+    	echo json_encode(["success" => true, "message" => "Swapped talks $first and $second."]);
+    }
+
      public function move_talk($entry_hash,$delta)
     {
     	$q = $this->db->query("select seq from entry where entry_hash=? and format='talk'",$entry_hash);
