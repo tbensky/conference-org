@@ -929,6 +929,15 @@ function get_entry_parts_flat($json)
 
 		return implode(", ", $affiliations);
 	}
+
+	function get_room_affiliation_summary_short($year,$place,$time_group)
+	{
+		$summary = $this->get_room_affiliation_summary($year,$place,$time_group);
+		if ($summary === "")
+			return "";
+
+		return str_replace("Department of ", "", $summary);
+	}
 }
 
 
