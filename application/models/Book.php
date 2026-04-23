@@ -118,9 +118,12 @@ public function to_be_forced($csm_id)
 public function tex_entry($entry,$number)
 {
 	$title = $this->fix_special($entry['title']);
+	$location = "";
+	if ($entry['format'] == 'poster' && !empty($entry['place']))
+		$location = " - " . $this->fix_special($entry['place']);
 	
 	print("\\begin{minipage}{\\textwidth}\n");
-	print("\\noindent{\\bf{\\large [$number] $title}}\\\\\n");
+	print("\\noindent{\\bf{\\large [$number$location] $title}}\\\\\n");
 
 
 	$authors = $this->fix_special($entry['people']);
@@ -156,9 +159,12 @@ public function tex_entry($entry,$number)
 public function tex_entry_qr($entry,$number)
 {
 	$title = $this->fix_special($entry['title']);
+	$location = "";
+	if ($entry['format'] == 'poster' && !empty($entry['place']))
+		$location = " - " . $this->fix_special($entry['place']);
 	
 	print("\\begin{minipage}[b]{0.90\\textwidth}\n");
-	print("\\noindent{\\bf{\\large [$number] $title}}\\\\\n");
+	print("\\noindent{\\bf{\\large [$number$location] $title}}\\\\\n");
 
 
 	$authors = $this->fix_special($entry['people']);

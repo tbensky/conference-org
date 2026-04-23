@@ -111,9 +111,9 @@ function get_entry_parts($json)
 		$entry['format'] = $json['format'];
 		$entry['talk_avail'] = $json['talk_avail'];
 		$entry['poster_avail'] = $json['poster_avail'];
-		$entry['place'] = $json['place'];
-		$entry['time'] = $json['time'];
-		$entry['time_group'] = $json['time_group'];
+		$entry['place'] = empty($json['place']) ? "" : $json['place'];
+		$entry['time'] = empty($json['time']) ? "" : $json['time'];
+		$entry['time_group'] = empty($json['time_group']) ? "" : $json['time_group'];
 		$affil_list = Array();
 		$people_list = Array();
 
@@ -295,14 +295,19 @@ function get_entry_parts_flat($json)
 	}
 
 
-function gen_preview($json)
+	function gen_preview($json)
 	{
 		$entry = $this->get_entry_parts($json);
 		$ret = "";
 	
 		$ret .= "<h2>";
 		if (!empty($entry['seq']))
-			$ret .= "[" . $entry['seq'] . "] ";
+		{
+			$ret .= "[" . $entry['seq'];
+			if ($entry['format'] == 'poster' && !empty($entry['place']))
+				$ret .= " - " . $entry['place'];
+			$ret .= "] ";
+		}
 		if (!empty($entry['time']))
 			$ret .= $entry['time'] . ": ";
 		$ret .= $entry['title'] . "</h2>";
@@ -358,9 +363,15 @@ function gen_preview($json)
 		$ret .= "<h2>";
 		$ret .= "<span id=\"" . $json['entry_hash'] . "\">";
 		if (!empty($entry['seq']))
-			$ret .= "[" . $entry['seq'] . "]: ";
-		$ret .= $entry['title'] . "</h2>";
+		{
+			$ret .= "[" . $entry['seq'];
+			if (!empty($entry['place']))
+				$ret .= " - " . $entry['place'];
+			$ret .= "]: ";
+		}
+		$ret .= $entry['title'];
 		$ret .= "</span>";
+		$ret .= "</h2>";
 		$ret .= "<h4>" . $entry['people'] . "</h4>";
 		$ret .= "<i>" . $entry['affil'] . "</i>";
 		$ret .= "<br/><br/>";
@@ -837,11 +848,13 @@ function gen_preview($json)
     				$time_group = $row['time_group'];
     				$z = anchor("start/mobile/" . $row['format'] . "/" . $place . "/" . $time_group . "/#" . $row['entry_hash'],$line,Array("class" => "btn btn-sm btn-primary"));
     			}
-    			else
-    			{
-    				$place = "all";
-    				$time = "all";
-    				$time_group = "all";
+			else
+			{
+				if (!empty($row['place']))
+					$line .= ": (" . $row['place'] . ")";
+				$place = "all";
+				$time = "all";
+				$time_group = "all";
     				$z = anchor("start/mobile/" . $row['format'] . "/" . $place . "/" . $time_group . "/#" . $row['entry_hash'],$line,Array("class" => "btn btn-sm btn-info"));
     			}
     			
@@ -867,6 +880,54 @@ function gen_preview($json)
 	{
 		$q = $this->db->query("select * from entry where place=? and time_group=? and year=?",[$place,$time_group,$year]);
 		return $q->num_rows() == 0;
+	}
+
+	function affiliation_display($person)
+	{
+		if (empty($person['affiliation']) || $person['affiliation'] == '--Select--')
+			return "";
+
+		if ($person['affiliation'] == 'Other...')
+		{
+			if (empty($person['other_affiliation']))
+				return "";
+			return trim($person['other_affiliation']);
+		}
+
+		$affiliation = $person['affiliation'];
+		if ($affiliation == 'Kinesiology')
+			$affiliation = 'Kinesiology and Public Health';
+
+		if ($affiliation == 'School of Education')
+			return $affiliation;
+
+		return "Department of " . $affiliation;
+	}
+
+	function get_room_affiliation_summary($year,$place,$time_group)
+	{
+		$q = $this->db->query(
+			"select people from entry where format='talk' and place=? and time_group=? and year=? order by seq asc",
+			[$place,$time_group,$year]
+		);
+
+		$affiliations = [];
+		foreach($q->result_array() as $row)
+		{
+			$people = json_decode($row['people'], true);
+			if (!is_array($people))
+				continue;
+
+			foreach($people as $person)
+			{
+				$affiliation = $this->affiliation_display($person);
+				if ($affiliation === "" || in_array($affiliation, $affiliations))
+					continue;
+				$affiliations[] = $affiliation;
+			}
+		}
+
+		return implode(", ", $affiliations);
 	}
 }
 

@@ -444,6 +444,97 @@ EOT;
 
 	}
 
+	public function poster_locations()
+	{
+		$year = $this->Setting->get("year");
+		$result = null;
+		$location_text = "";
+
+		if ($this->input->method() === 'post')
+		{
+			$location_text = (string)$this->input->post("location_text");
+			$lines = preg_split("/\r\n|\n|\r/", $location_text);
+			$assignments = [];
+			$errors = [];
+
+			foreach($lines as $index => $line)
+			{
+				$line = trim($line);
+				if ($line === "")
+					continue;
+
+				$parts = explode(",", $line, 3);
+				if (count($parts) !== 3)
+				{
+					$errors[] = "Line " . ($index + 1) . " must look like start,end,location";
+					continue;
+				}
+
+				$start = (int)trim($parts[0]);
+				$end = (int)trim($parts[1]);
+				$place = trim($parts[2]);
+
+				if ($start < 1 || $end < 1)
+				{
+					$errors[] = "Line " . ($index + 1) . " must use positive poster numbers";
+					continue;
+				}
+
+				if ($start > $end)
+				{
+					$errors[] = "Line " . ($index + 1) . " has start greater than end";
+					continue;
+				}
+
+				if ($place === "")
+				{
+					$errors[] = "Line " . ($index + 1) . " must include a location";
+					continue;
+				}
+
+				$assignments[] = ["start" => $start, "end" => $end, "place" => $place];
+			}
+
+			if (empty($errors) && !empty($assignments))
+			{
+				$this->db->trans_start();
+				foreach($assignments as $assignment)
+				{
+					$this->db->query(
+						"update entry set place=? where year=? and format='poster' and seq>=? and seq<=?",
+						[$assignment['place'], $year, $assignment['start'], $assignment['end']]
+					);
+				}
+				$this->db->trans_complete();
+
+				if ($this->db->trans_status() === false)
+					$result = ["success" => false, "messages" => ["Poster locations were not saved."]];
+				else
+					$result = ["success" => true, "messages" => ["Poster locations updated."]];
+			}
+			else if (empty($errors))
+			{
+				$result = ["success" => false, "messages" => ["Enter at least one line to update poster locations."]];
+			}
+			else
+				$result = ["success" => false, "messages" => $errors];
+		}
+
+		$q = $this->db->query(
+			"select seq,title,place from entry where year=? and format='poster' order by seq asc",
+			[$year]
+		);
+
+		$this->load->view('header');
+        $this->load->view('poster_locations',[
+        	"year" => $year,
+        	"result" => $result,
+        	"location_text" => $location_text,
+        	"posters" => $q->result_array()
+        ]);
+        $this->load->view('footer');
+	}
+
 	public function stats($year)
 	{
 		$this->load->view('header');

@@ -87,6 +87,9 @@ else if ($type == "menu" && $room == "all" && $time_group == "all")
 				if (!$this->Entry->room_is_empty($year,$room,$time_group))
 				{
 					echo anchor("start/mobile/talk/$room/$time_group","$room",Array("class" => "btn btn-success btn-lg"));
+					$affiliation_summary = $this->Entry->get_room_affiliation_summary($year,$room,$time_group);
+					if (!empty($affiliation_summary))
+						echo "<div><small class='text-muted'>" . htmlspecialchars($affiliation_summary) . "</small></div>";
 					echo "<br/>";
 					echo "<br/>";
 				}

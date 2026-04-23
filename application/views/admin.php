@@ -59,6 +59,10 @@ echo anchor("start/manual_order_posters/$year","Manual poster ordering");
 echo "<br/><small>Do manaual ordering of posters as needed.";
 echo "<ul><li> Examples: <ul><li>Requests by faculty to group posters<li>Distributing SRCF (Santa Rosa Creek Foundation) posters</ul></ul></small>";
 
+echo "<li>";
+echo anchor("start/poster_locations","Set poster locations");
+echo "<br/><small>Set the <code>place</code> field for ranges of poster numbers using lines like <code>1,10,3rd floor</code>.</small>";
+
 
 echo "<li>" . anchor("start/concise_posters/$year","Posters ordering report");
 echo "<br/><ul><li><small>Prints ordered map of posters for 180-walkthrough/planning.</small></ul>";
