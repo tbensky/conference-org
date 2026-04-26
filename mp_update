@@ -1,0 +1,3 @@
+multipass transfer foo:/home/ubuntu/conference-org-main/application/views/*.php application/views
+multipass transfer foo:/home/ubuntu/conference-org-main/application/models/*.php application/models
+multipass transfer foo:/home/ubuntu/conference-org-main/application/controllers/*.php application/controllers

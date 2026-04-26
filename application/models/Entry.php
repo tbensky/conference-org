@@ -341,7 +341,12 @@ function get_entry_parts_flat($json)
 
 		$ret .= "<span id=\"" . $json['entry_hash'] . "\">";
 		if (!empty($entry['seq']))
-			$ret .= "[" . $entry['seq'] . "]: ";
+		{
+			$ret .= "[" . $entry['seq'];
+			if (!empty($entry['place']))
+				$ret .= " - " . $entry['place'];
+			$ret .= "]: ";
+		}
 		$ret .=  $entry['title'] . "</h2>";
 		$ret .= "</span>";
 		$ret .= "<h4>" . $entry['people'] . "</h4>";
