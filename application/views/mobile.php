@@ -71,7 +71,9 @@ else if ($type == "menu" && $room == "all" && $time_group == "all")
 	echo "</div>";
 
 	echo "<hr/>";
-	echo anchor("start/search/year","Full program view and search",Array("class" => "btn btn-primary btn-lg mb-3"));
+	echo "<h2>Full Program</h2>";
+	echo anchor("start/search/year","View and search",Array("class" => "btn btn-primary btn-lg mb-3"));
+	echo "<hr/>";
 	echo "<br/>";
 	echo "<h2>Talks</h2>";
 

@@ -1,11 +1,14 @@
 <?php
 $year = $this->Setting->get("year");
+$counts = $this->Entry->count_them();
+$total_count = $counts['talks'] + $counts['posters'];
 
 echo "<div class='container'>";
 echo "<div class='row'>";
 
 echo "<center>";
 echo "<h4>Full program search</h4>";
+echo "<div><small class='text-muted'>($total_count entries)</small></div>";
 
 echo "<div class='row'>";
 echo "<div class='col-2'>";
@@ -13,17 +16,19 @@ echo "<div class='col-2'>";
 echo "</div>";
 
 echo "<div class='col-10'>";
-        echo "<input type=text class=form-control id='search' onkeyup='myFunction()' placeholder='Type name, title, keyword, etc.'>";
+        echo "<input type=text class=form-control id='search' onkeyup='myFunction()' placeholder='Type name, title, keyword, department, etc.'>";
         echo "<div><small class='text-muted'><span id='record_count'></span> entries below</small></div>"; 
 echo "</div>";
 echo "</div>";
 echo "</center>";
 
 echo "<h1 class='mt-3'>Talks</h1>";
+echo "<div><small class='text-muted'>(" . $counts['talks'] . " entries)</small></div>";
 $q = $this->db->query("select * from entry where format='talk' and year=? order by seq asc",[$year]);
 $this->Entry->list_all_search($q);
 
 echo "<h1>Posters</h1>";
+echo "<div><small class='text-muted'>(" . $counts['posters'] . " entries)</small></div>";
 $q = $this->db->query("select * from entry where format='poster' and year=? order by seq asc",[$year]);
 $this->Entry->list_all_search($q);
 
